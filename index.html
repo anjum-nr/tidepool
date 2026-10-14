@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}</style>
+<title>Tidepool Ceramics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Layout: one centered column. Hero is text beside a glazed pot, then sessions list, process steps, visit details. */
+  :root {
+    --bg: #eef2ee;
+    --surface: #f8faf8;
+    --fg: #14201c;
+    --muted: #4c5e56;
+    --line: #c8d4cc;
+    --accent: #2447c9;
+    --on-accent: #ffffff;
+    --glaze: #b9d6c4;
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1715;
+      --surface: #16211e;
+      --fg: #e6eee9;
+      --muted: #9bb0a6;
+      --line: #2a3a35;
+      --accent: #8aa3ff;
+      --on-accent: #0f1715;
+      --glaze: #3b5c4f;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1715;
+    --surface: #16211e;
+    --fg: #e6eee9;
+    --muted: #9bb0a6;
+    --line: #2a3a35;
+    --accent: #8aa3ff;
+    --on-accent: #0f1715;
+    --glaze: #3b5c4f;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-block: 0 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1040px; margin-inline: auto; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -0.015em; }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Header */
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 20px; border-bottom: 1px solid var(--line); }
+  .brand { font-family: var(--font-display); font-weight: 700; font-size: 20px; text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  nav a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; padding-block: 4px; }
+  nav a:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 4px; }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px 48px; align-items: center; padding-block: 56px 64px; }
+  .hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 700; }
+  .hero p { max-width: 52ch; color: var(--muted); font-size: 18px; margin: 20px 0 28px; }
+  .btn {
+    display: inline-block; background: var(--accent); color: var(--on-accent);
+    font-weight: 600; text-decoration: none; padding: 12px 22px; border-radius: 6px;
+    transition: transform 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .pot { justify-self: center; width: 100%; max-width: 320px; height: auto; }
+
+  /* Sections */
+  section { padding-block: 40px; border-top: 1px solid var(--line); }
+  .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 12px 48px; margin-bottom: 28px; }
+  .section-head h2 { font-size: clamp(1.6rem, 3.6vw, 2.3rem); }
+  .section-head p { margin: 0; color: var(--muted); max-width: 56ch; }
+
+  /* Sessions */
+  .sessions { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+  .sessions li { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; gap: 8px 24px; align-items: center; padding: 18px 20px; }
+  .sessions li + li { border-top: 1px solid var(--line); }
+  .date { font-family: var(--font-mono); font-weight: 500; }
+  .session-name { font-family: var(--font-display); font-weight: 500; font-size: 18px; }
+  .session-detail { color: var(--muted); font-size: 14px; }
+  .seats { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; white-space: nowrap; }
+  .seats.low { border-color: var(--accent); color: var(--accent); }
+
+  /* Process */
+  .steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
+  .steps li { counter-increment: step; border-top: 2px solid var(--fg); padding-top: 12px; }
+  .steps li::before { content: "Step " counter(step); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .steps h3 { font-size: 20px; margin: 6px 0 6px; }
+  .steps p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* Visit */
+  .visit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; }
+  .visit dl { margin: 0; display: grid; gap: 16px; }
+  .visit dt { margin-bottom: 2px; }
+  .visit dd { margin: 0; }
+  .email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .email { font-family: var(--font-mono); font-size: 15px; overflow-wrap: anywhere; user-select: all; }
+  .copy { font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 4px 12px; }
+  .copy:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: minmax(0, 1fr); padding-block: 36px 44px; }
+    .pot { max-width: 220px; justify-self: start; }
+    .section-head { grid-template-columns: minmax(0, 1fr); }
+    .sessions li { grid-template-columns: minmax(0, 1fr) auto; }
+    .sessions .date { grid-column: 1 / -1; }
+    .steps { grid-template-columns: minmax(0, 1fr); }
+    .visit { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn { transition: none; }
+    .btn:hover { transform: none; }
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top">Tidepool Ceramics</a>
+    <nav aria-label="Page sections">
+      <a href="#sessions">Sessions</a>
+      <a href="#process">How it works</a>
+      <a href="#visit">Visit</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <p class="label">Wheel-throwing studio</p>
+        <h1>Learn to throw a bowl, four seats at a time.</h1>
+        <p>Small evening and weekend sessions at the wheel. You get clay, tools, an apron and a teacher who stays at your elbow. Your pieces are fired and glazed for you, and ready to collect in about three weeks.</p>
+        <a class="btn" href="#sessions">See open sessions</a>
+      </div>
+      <svg class="pot" viewBox="0 0 200 250" role="img" aria-label="Illustration of a glazed vase">
+        <defs>
+          <clipPath id="vase-clip">
+            <path d="M80 20H120C120 40 118 55 125 75C150 100 170 130 170 165C170 205 140 225 100 225C60 225 30 205 30 165C30 130 50 100 75 75C82 55 80 40 80 20Z"/>
+          </clipPath>
+        </defs>
+        <ellipse cx="100" cy="232" rx="64" ry="8" fill="var(--line)"/>
+        <path d="M80 20H120C120 40 118 55 125 75C150 100 170 130 170 165C170 205 140 225 100 225C60 225 30 205 30 165C30 130 50 100 75 75C82 55 80 40 80 20Z" fill="var(--accent)"/>
+        <g clip-path="url(#vase-clip)">
+          <path d="M20 10H180V96C170 96 168 120 156 120C146 120 144 104 134 104C124 104 122 134 110 134C100 134 98 100 88 100C78 100 74 126 62 126C52 126 50 98 40 98C30 98 28 108 20 108Z" fill="var(--glaze)"/>
+          <path d="M30 168C70 178 130 178 170 168" fill="none" stroke="var(--on-accent)" stroke-opacity="0.45" stroke-width="2"/>
+          <path d="M34 184C74 194 126 194 166 184" fill="none" stroke="var(--on-accent)" stroke-opacity="0.45" stroke-width="2"/>
+        </g>
+      </svg>
+    </div>
+
+    <section id="sessions">
+      <div class="section-head">
+        <h2>Open sessions this month</h2>
+        <p>Each session runs three hours and is limited to four people, so everyone gets time on the wheel. No experience needed for the first two.</p>
+      </div>
+      <ul class="sessions">
+        <li>
+          <span class="date">Sat 17 Oct</span>
+          <div>
+            <div class="session-name">First Bowl</div>
+            <div class="session-detail">Beginner · 3 hrs · centering and pulling walls</div>
+          </div>
+          <span class="seats low">2 of 4 seats left</span>
+        </li>
+        <li>
+          <span class="date">Sun 18 Oct</span>
+          <div>
+            <div class="session-name">Mugs and Handles</div>
+            <div class="session-detail">Beginner · 3 hrs · throw a cylinder, pull a handle</div>
+          </div>
+          <span class="seats">4 of 4 seats left</span>
+        </li>
+        <li>
+          <span class="date">Sat 24 Oct</span>
+          <div>
+            <div class="session-name">Trimming Night</div>
+            <div class="session-detail">Some experience · 3 hrs · trim feet on leather-hard pots</div>
+          </div>
+          <span class="seats low">1 of 4 seats left</span>
+        </li>
+        <li>
+          <span class="date">Sat 31 Oct</span>
+          <div>
+            <div class="session-name">Glaze Day</div>
+            <div class="session-detail">All levels · 3 hrs · dip, brush and test tiles</div>
+          </div>
+          <span class="seats">3 of 4 seats left</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="process">
+      <div class="section-head">
+        <h2>From lump of clay to finished bowl</h2>
+        <p>A piece goes through six stages before you take it home. You do the first three with us, and we handle the kiln work.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Wedge</h3>
+          <p>Knead the clay to push out air bubbles, which can crack a pot in the kiln.</p>
+        </li>
+        <li>
+          <h3>Throw</h3>
+          <p>Center the clay on the wheel, open it up and pull the walls to height.</p>
+        </li>
+        <li>
+          <h3>Trim</h3>
+          <p>Once the pot is leather-hard, shave the base and carve a neat foot ring.</p>
+        </li>
+        <li>
+          <h3>Bisque fire</h3>
+          <p>A first firing to about 1000°C turns soft clay into porous, glazeable ceramic.</p>
+        </li>
+        <li>
+          <h3>Glaze</h3>
+          <p>Dip or brush on glaze. It looks chalky now and changes color in the kiln.</p>
+        </li>
+        <li>
+          <h3>Glaze fire</h3>
+          <p>A cone 6 firing, around 1220°C, melts the glaze into a hard, food-safe surface.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="visit">
+      <div class="section-head">
+        <h2>Visit the studio</h2>
+        <p>Wear clothes you don't mind getting muddy. Closed-toe shoes are required near the kilns.</p>
+      </div>
+      <div class="visit">
+        <dl>
+          <div>
+            <dt class="label">Address</dt>
+            <dd>Unit 4, Harbour Row Workshops<br>Ground floor, around the back</dd>
+          </div>
+          <div>
+            <dt class="label">Opening hours</dt>
+            <dd>Wed to Fri, 5 to 9 pm<br>Sat and Sun, 10 am to 5 pm</dd>
+          </div>
+        </dl>
+        <dl>
+          <div>
+            <dt class="label">Book a seat</dt>
+            <dd>
+              <div class="email-row">
+                <span class="email" id="email-text">hello@tidepoolceramics.example</span>
+                <button class="copy" id="copy-email" type="button">Copy</button>
+              </div>
+            </dd>
+          </div>
+          <div>
+            <dt class="label">Cancellations</dt>
+            <dd>Free up to 48 hours before a session. After that we keep the seat for the next person on the waiting list.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>Sample page for a fictional studio. Swap in your own name, sessions and details.</footer>
+</div>
+
+<script>
+  (function () {
+    var btn = document.getElementById("copy-email");
+    var text = document.getElementById("email-text");
+    if (!btn || !text) return;
+    function selectText() {
+      var range = document.createRange();
+      range.selectNodeContents(text);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    btn.addEventListener("click", function () {
+      var done = function (msg) {
+        btn.textContent = msg;
+        setTimeout(function () { btn.textContent = "Copy"; }, 1800);
+      };
+      try {
+        navigator.clipboard.writeText(text.textContent).then(
+          function () { done("Copied"); },
+          function () { selectText(); done("Selected"); }
+        );
+      } catch (e) {
+        selectText();
+        done("Selected");
+      }
+    });
+  })();
+</script>
+</body>
+</html>
